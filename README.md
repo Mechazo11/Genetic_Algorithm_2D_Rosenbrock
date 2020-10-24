@@ -23,8 +23,9 @@ Features
 * Starting population randomly created
 * Auto termination -- (To be implemented)
 
-For questions, suggestions please don't hesistate to contact me
+For questions, suggestions please feel free to contact me
 
+With best,
 Azmyin Md. Kamal,
 Graduate Research Assistant,
 M.Sc. in Mechanical Engineering,
