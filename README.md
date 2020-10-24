@@ -1,6 +1,7 @@
 # Genetic_Algorithm_2D_Rosenbrock
 
 Genetic Algorithm that solves 2D Rosenbrock problem. Look into GA_rosenbrock.mlx for details.
+
 Version -- 2.5.5
 
 Written in MATLAB Version -- 2019b
@@ -29,7 +30,11 @@ For questions, suggestions please feel free to contact me
 
 With best,
 Azmyin Md. Kamal,
+
 Graduate Research Assistant,
+
 M.Sc. in Mechanical Engineering,
+
 Univ. of Louisiana at Lafayette,
+
 Email: c00441440@louisiana.edu
