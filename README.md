@@ -7,10 +7,13 @@ Updated on -- 11/08/2020
 
 Written in MATLAB Version -- 2019b
 
+## TODO
+1. find_mate_with_replacement and find_mate_without_replacement are hardcoded for 2 variable problems. This will be fixed in version 4 
+
 Known dependencies
 1. Statistics Toolbox -- randsample
 
-Usage
+## Usage
 1. Run GA_rosenbrock.mlx
 2. Choose N as a even number
 3. Choose num_iter to run Genetic Algorithm for "num_iter" generations
@@ -20,8 +23,7 @@ Usage
 6. Input target_x2 = known global optimium location for variable x2
 7. Table and plot control variables can take a value between 0 and 1
 
-
-Features
+## Features
 * Single point cross over
 * Bit flip mutation operator
 * Mate pool -- choose with replacement (i.e. a candiate can be repeated)
