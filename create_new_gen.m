@@ -110,7 +110,7 @@ function [child1, child2] = genetic_crossover(couple_row, rand_num, bit_count,U,
         child1(1,bit_loc) = ~child1(1,bit_loc);
         child2(1,bit_loc) = ~child2(1,bit_loc);
     else
-        fprintf("No mutation!\n");
+        %fprintf("No mutation!\n");
     end 
     
     % --------------------------------------------------------------------

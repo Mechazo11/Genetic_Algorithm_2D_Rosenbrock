@@ -1,3 +1,4 @@
+% --------------------------------------------------------------------------
 function [new_gen_2] = run_genetic_algo(gen_count, X1, global_min_x1, global_min_x2, U, L, bit_count, n_feature, N, seed_tab, plot_res_1, plot_res_2, show_tables)
     
     % Step 0: Check if we have more than N samples.
@@ -67,10 +68,10 @@ function [new_gen_2] = run_genetic_algo(gen_count, X1, global_min_x1, global_min
     fname = append("Generation",' ',num2str(gen_count));
     if (plot_res_1 == 1)
         figure; % Initiates a separate figure window
-        scatter(x11,x22,'k','filled'); % Black star, design candidates
+        ff1 = scatter(x11,x22,'k','filled'); % Black star, design candidates
         grid on
         hold on;
-        scatter(global_min_x1,global_min_x1,'dr','filled'); % Red diamond indicates target
+        ff1 = scatter(global_min_x1,global_min_x1,'dr','filled'); % Red diamond indicates target
         xlabel("x1");
         ylabel("x2");
         title(append(fname,' ',"2D plot"));
@@ -82,26 +83,28 @@ function [new_gen_2] = run_genetic_algo(gen_count, X1, global_min_x1, global_min
     
     % Step 3d Plot fitness vs (x1,x2) 3D plot
     if (plot_res_2 == 1)
-        z = transpose(fit_g1);
-        figure;
-        scatter3(x11,x22,z, 'filled', 'MarkerEdgeColor','k');
-        view([-37.36 18.64]);
-        xlim([L,U]);
-        ylim([L,U]);
-        zlim([0, 4000]); % HARDCODED zlim
-        xlabel("x1");
-        ylabel("x2");
-        zlabel("fitness");
+        % Recombine x1 and x2
+        XX = [x1 x2];
+        % Evaluate function (i.e. just the objective function)
+        fxx = obj_f(XX);
+        % Draw Rosenbrock plot
+        figure; % Initiates a separate figure window
+        fig1 = show_rosenbrock();
+        % Plot candidate locations on the 3D plot
+        hold on;
+        fig1 = scatter3(XX(:,1),XX(:,2),fxx,'filled','MarkerEdgeColor','k','MarkerFaceColor','r');
+        title(append(fname,' ',"3D plot"));
+        hold off    
     end
     
     %----------------------------------------------------------------
-    
     % Step 4 Select N random numbers from pool for genetic cross over
     % datasample -- MATLAB's builtin function
     comp_rand = datasample(rand_ls, N,'Replace',false);
     
     % Step 5 Determine mate using wheel of fortune
-    mate_matrix = find_mates(X1, cumu_prob_g1, comp_rand);
+    %mate_matrix = find_mates_without_replacement(X1, cumu_prob_g1, comp_rand);
+    mate_matrix = find_mates_with_replacement(X1, cumu_prob_g1, comp_rand);
     
     % Step 6 Reshape to have candiates form couple per row
     mmx = reshape_long_row(mate_matrix);
@@ -125,8 +128,7 @@ function [new_gen_2] = run_genetic_algo(gen_count, X1, global_min_x1, global_min
     
 end
 
-% --------------------------------------------------------------------------
-
+% ---------------------------------------------------------------------------
 function [X1_best] = bring_back_N(X1, n_feature)
     % Calculate fitness and take out the weakest member
     [fit_g1, cumu_fit_g1] = eval_obj(X1);
@@ -147,24 +149,19 @@ function [X1_best] = bring_back_N(X1, n_feature)
 end
 
 % ---------------------------------------------------------------------------
-
 function [fitness, cumu_fit]  = eval_obj(X) % X is a matrix containing x1,x2 . 
     % This function must be modified on case by case basis
-    % Unpack and form row vectors for x1 and x2
-    x1 = X(:,1);
-    x2 = X(:,2);
     
-    % Element wise operation - part of vectorized method of evaluating a
-    % function with multiple design values instead of using for loop
-    % MATLAB's sin, cos automatically uses radian
-    obj_f = 100 .* (x2 - x1.^2).^2 + (1 - x1).^2;
-    obj_f = transpose(obj_f); % Converting to a row vector
+    fval = obj_f(X);
+    fval = transpose(fval); % Converting to a row vector
     
     % Remember we have to find fitness by using this equation fit = 1.5 - f
     % where f = obj_f
     
     % The '4000' scalar was found empirifaclly
-    fitness = 4000 - obj_f;
+    global fit_integer
+    %fitness = 4000 - fval;
+    fitness = fit_integer - fval;
     
     % Add up all fitness values
     cumu_fit = sum(fitness,2); % Value 2 tells MATLAB to sum along all the rows
@@ -184,9 +181,74 @@ function [frac_to_fit, cumu_prob] = eval_fraction_fitness(fitness, cumu_fit)
     cumu_prob = cumsum(frac_to_fit,2);
 end
 
-% ---------------------------------------------------------------------------
 
-function X22 = find_mates(X_current, cumu_prob, comp_rand)
+% ---------------------------------------------------------------------------
+function X22 = find_mates_with_replacement(X_current, cumu_prob, comp_rand)
+    % Allow a candiate to be repeated in the mating pool
+    % Note, both cumu_prob and comp_rand are row vectors
+    % The are needed to be flipped to column vector
+    
+    % Debug
+    %comp_rand = [0.9117, 0.5981, 0.5866, 0.8035, 0.5276, 0.3441];
+    
+    X11 = [X_current, (cumu_prob).', (comp_rand).']; % Big matrix
+    NX = size(X11,1); % Number of rows i.e number of candiates
+    X22 = zeros(NX,2);
+    num_to_iter = size(X11,1);
+
+    % Scratch pad variable
+    row_prob = 0;
+    rand_prob = 0;
+    test_idx = 1;
+    cnt = 1;
+    
+    %X11 % Debug
+    
+    % Main loop
+    for ii = 1:num_to_iter
+        rand_prob = X11(ii,4); % Choose random number sequentially
+        %fprintf("Rand prob now --> %f\n",rand_prob);
+        
+        % Look through each cumulative probability
+        for kk = 1: num_to_iter
+            % Load each cumulative probability sequentially
+            row_prob = X11(kk,3);
+            %fprintf("Cumulative prob now --> %f\n",row_prob);
+            
+            % Check if current cumulative prob is bigger than current row
+            % vector
+            if (row_prob > rand_prob)
+                X22(ii,:) = X_current(kk,:);
+                % Reset for next random number
+                rand_prob = 0;
+                row_prob = 0;
+                cnt = 1;
+                break; % We got a hit
+            else
+                cnt = cnt + 1; % Dummy to prevent error
+                if (cnt<num_to_iter)
+                    continue % Go to next random probability value
+                else
+                    % Guard against overflow
+                    % change random probability value
+                    % Exceeded num_iter count
+                    % Reset cnt
+                    % reset kk
+                    % continue again
+                    rand_prob = 0.111;
+                    cnt = 1;
+                    kk = 1;
+                    continue
+                end
+            end
+        end
+    end
+    %X22 % What is X22 now?
+end
+
+% ---------------------------------------------------------------------------
+function X22 = find_mates_without_replacement(X_current, cumu_prob, comp_rand)
+    % Does not allow a candidate to be repeated in the mating pool
     % Note, both cumu_prob and comp_rand are row vectors
     % The are needed to be flipped to column vector
     
@@ -219,6 +281,9 @@ function X22 = find_mates(X_current, cumu_prob, comp_rand)
                 %fprintf("-----------------------------------------------------------\n");
                 %fprintf("Assigned G_%d position %d going to next candidate\n", ii,kk);
                 %fprintf("-----------------------------------------------------------\n");
+                rand_prob = 0;
+                row_prob = 0;
+                cnt = 1;
                 break % We stop the inner loop and move onto next candidate
             else
                 cnt = cnt + 1; % Dummy to prevent error

@@ -2,7 +2,8 @@ function [rand_ls] = random_g1(N,min,max, n_feature)
 % N-- number of candidates to genereate
 % min -- min of variable range
 % manx -- max of variable range
-rng(0,'twister');
+%rng(0,'twister');
+rng shuffle;
 a = min;
 b = max;
 num_to_gen = N * n_feature; % Number of elements needed to generate (N by n_feature) genes for N candidates
