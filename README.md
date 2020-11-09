@@ -1,6 +1,6 @@
 # Genetic_Algorithm_2D_Rosenbrock
 
-Genetic Algorithm that solves 2D Rosenbrock problem. Look into GA_rosenbrock.mlx for details.
+Genetic Algorithm tp 2D unconstrained optimization problem. Rosenbrock is chosen as an illustrative example
 
 Version -- 3.0
 Updated on -- 11/08/2020
