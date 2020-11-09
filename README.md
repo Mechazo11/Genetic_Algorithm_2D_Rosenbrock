@@ -2,7 +2,8 @@
 
 Genetic Algorithm that solves 2D Rosenbrock problem. Look into GA_rosenbrock.mlx for details.
 
-Version -- 2.5.5
+Version -- 3.0
+Updated on -- 11/08/2020
 
 Written in MATLAB Version -- 2019b
 
@@ -11,30 +12,29 @@ Known dependencies
 
 Usage
 1. Run GA_rosenbrock.mlx
-2. Values of candidate, N must be even number.
+2. Choose N as a even number
+3. Choose num_iter to run Genetic Algorithm for "num_iter" generations
+3. Supply U and L, the upper and lower bound values for x1,x2....xn
+4. Choose number of bits to represent design variables, bit_count = [8,16,32]. I tested with 8 and 16
+5. Input target_x1 = known global optimium location for variable x1
+6. Input target_x2 = known global optimium location for variable x2
+7. Table and plot control variables can take a value between 0 and 1
+
 
 Features
-* Crossover probabilty randomized -- (To be implemented)
-* Check N as even -- (To be implemented) 
-* Mutation enabled
-* Mutation occurs at child level.
-* Bit-Flip Mutation operator - modified approach, look at function bit_flip(child_array)
-* Random Building Block Operator -- (To be implemented) 
-* Elitisim (Copy fittest individual to next generation)
-* Survival of the fittest (drop a candidate with poorest fit to bring N+1 candidate pool to N candidate pool)
-* Allowed gene length = 8, 16 (can go up as power of 2 but only tested 8 and 16)
+* Single point cross over
+* Bit flip mutation operator
+* Mate pool -- choose with replacement (i.e. a candiate can be repeated)
+* Elitisim (copy strongest candiate to next generation)
+* Survival of the fittest, Gene enconding = 8bits, 16bit
 * Starting population randomly created
-* Auto termination -- (To be implemented)
+* Script can be adopted for any two variable design problem
 
 For questions, suggestions please feel free to contact me
 
-With best,
-Azmyin Md. Kamal,
-
-Graduate Research Assistant,
-
-M.Sc. in Mechanical Engineering,
-
-Univ. of Louisiana at Lafayette,
-
+With best regards,
+Azmyin Md. Kamal,<br/>
+Graduate Research Assistant,<br/>
+M.Sc. in Mechanical Engineering,<br/>
+The University of Louisiana at Lafayette,<br/>
 Email: c00441440@louisiana.edu
