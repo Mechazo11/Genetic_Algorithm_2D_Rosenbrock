@@ -1,9 +1,9 @@
 # Genetic_Algorithm_2D_Rosenbrock
 
-Genetic Algorithm tp 2D unconstrained optimization problem. Rosenbrock is chosen as an illustrative example
+Demonstrates usage of a Genetic Algorithm in solving a 2D unconstrained optimization problem. A standard Rosenbrock problem is chosen as an illustrative example
 
-Version -- 3.0
-Updated on -- 11/08/2020
+Version -- 3.5
+Updated on -- 02/11/2023
 
 Written in MATLAB Version -- 2019b
 
@@ -13,15 +13,15 @@ Written in MATLAB Version -- 2019b
 Known dependencies
 1. Statistics Toolbox -- randsample
 
-## Usage
+## How to use
 1. Run GA_rosenbrock.mlx
 2. Choose N as a even number
-3. Choose num_iter to run Genetic Algorithm for "num_iter" generations
+3. Set "num_iter" to run Genetic Algorithm for "num_iter" generations
 3. Supply U and L, the upper and lower bound values for x1,x2....xn
 4. Choose number of bits to represent design variables, bit_count = [8,16,32]. I tested with 8 and 16
 5. Input target_x1 = known global optimium location for variable x1
 6. Input target_x2 = known global optimium location for variable x2
-7. Table and plot control variables can take a value between 0 and 1
+7. "Table" and "plot" control variables, takes a value between 0 and 1 [TODO need to check this again]
 
 ## Features
 * Single point cross over
@@ -39,4 +39,5 @@ Azmyin Md. Kamal,<br/>
 Graduate Research Assistant,<br/>
 M.Sc. in Mechanical Engineering,<br/>
 The University of Louisiana at Lafayette,<br/>
-Email: c00441440@louisiana.edu
+2nd year Ph.D. student, Dept. of MIE, Louisiana State University<br/>
+Email: akamal4@lsu.edu
